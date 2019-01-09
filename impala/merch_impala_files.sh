@@ -5,7 +5,10 @@ table_name=$2
 s_date=$3
 
 echo "table======$schema.$table_name   s_date======$s_date"
-impala-shell -q "describe ${schema}.${table_name};" -B --output_delimiter ";"  -o  ${script_path}/fields_tmp.txt
+#impala-shell -q "describe ${schema}.${table_name};" -B --output_delimiter ";"  -o  ${script_path}/fields_tmp.txt
+#fix impala获取表字段时，注释中有空格，导致字段取出不对问题
+impala-shell -q "describe ${schema}.${table_name};" -B --output_delimiter ";" | awk -F ';' '{print $1}' > ${script_path}/fields_tmp.txt
+
 
 #get table's fields
 for line in `cat ${script_path}/fields_tmp.txt`
